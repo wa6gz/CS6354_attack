@@ -20,7 +20,7 @@
 // Intrinsic CLFLUSH for FLUSH+RELOAD attack
 #define CLFLUSH(address) _mm_clflush(address);
 
-#define SAMPLES 50 // TODO: CONFIGURE THIS
+#define SAMPLES 65 // TODO: CONFIGURE THIS
 
 #define L1_CACHE_SIZE (32*1024)
 #define LINE_SIZE 64
@@ -162,7 +162,7 @@ void trojan(char byte, int k)
 
 
     // get base address
-    CPUID();
+    //CPUID();
     eviction_set_addr = get_eviction_set_address(trojan_array, set, 0);
     //start reading at base address of set
     for (j = 1; j < L2_TO_L1_SIZE * ASSOCIATIVITY; j++) {
@@ -209,7 +209,7 @@ char spy()
         //RDTSC(start);
         // get base address
         eviction_set_addr = get_eviction_set_address(spy_array, i, 0);
-        CPUID();
+        //CPUID();
         RDTSC(start);
         //start reading at base address of set
         for (j = 1; j < ASSOCIATIVITY; j++) {
@@ -223,7 +223,8 @@ char spy()
         //CPUID();
         //if linked list took too long too access
         // set was accessed 
-        time = end - start - read_overhead - (ASSOCIATIVITY-1) * loop_overhead;
+        // time = end - start - read_overhead - (ASSOCIATIVITY-1) * loop_overhead;
+        time = end - start;
 
         if(time > max_time){
             max_time = time;
@@ -264,8 +265,8 @@ int main()
 
     setup(spy_array, ASSOCIATIVITY);
 
-    read_overhead = compute_read_overhead();
-    loop_overhead = compute_loop_overhead();
+    // read_overhead = compute_read_overhead();
+    // loop_overhead = compute_loop_overhead();
 
     int charNum = 0;
     
