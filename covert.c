@@ -233,7 +233,7 @@ char spy()
     eviction_counts[max_set]++;
 }
 
-int printEvicCounts(int* evicCounts){
+int printEvicCounts(uint64_t* evicCounts){
     printf("\t");
     int i, j;
     for(j = 0; j < 16; j++)
