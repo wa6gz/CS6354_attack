@@ -238,6 +238,7 @@ int printEvicCounts(uint64_t* evicCounts){
     int i, j;
     for(j = 0; j < 16; j++)
             printf("%d\t",j);
+    printf("\n");
     for(i = 0; i < 4; i++){
         printf("%d\t",i);
         for(j = 0; j < 16; j++)
