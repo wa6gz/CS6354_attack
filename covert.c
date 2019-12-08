@@ -146,7 +146,7 @@ void trojan(char byte, int k)
         exit(1);
     }
     if (k == 0)
-        fprintf(stderr, "%c %d", byte, set);
+        fprintf(stderr, "%c %d\n", byte, set);
     
     /* TODO:
      * Your attack code goes in here.
@@ -233,6 +233,20 @@ char spy()
     eviction_counts[max_set]++;
 }
 
+int printEvicCounts(int* evicCounts){
+    printf("\t")
+    int i, j;
+    for(j = 0; j < 16; j++)
+            printf("%d\t",j);
+    for(i = 0; i < 4; i++){
+        printf("%d\t",i);
+        for(j = 0; j < 16; j++)
+            printf("%d\t",evicCounts[i*16+j]);
+        printf("\n");
+    }
+}
+
+
 int main()
 {
     FILE *in, *out;
@@ -259,6 +273,7 @@ int main()
           trojan(msg, k);
           spy();
         }
+        printEvicCounts();
         for (j = 0; j < L1_NUM_SETS; j++) {
             if (eviction_counts[j] > max_count) {
                 max_count = eviction_counts[j];
