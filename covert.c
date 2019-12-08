@@ -132,7 +132,7 @@ void trojan(char byte)
 {
     int set, j;
     uint64_t *eviction_set_addr;
-    printf("%s\n", "in trojan with byte");
+    // printf("%s\n", "in trojan with byte");
 
     if (byte >= 'a' && byte <= 'z') {
         byte -= 32;
@@ -191,7 +191,7 @@ char spy()
     int i, max_set, j;
     uint64_t *eviction_set_addr;
     uint64_t start, end, time, max_time = 0;
-    printf("%s\n", "in spy");
+    // printf("%s\n", "in spy");
 
     // Probe the cache line by line and take measurements
     for (i = 0; i < L1_NUM_SETS; i++) {
@@ -271,3 +271,4 @@ int main()
     fclose(in);
     fclose(out);
 }
+    
