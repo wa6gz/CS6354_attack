@@ -257,7 +257,7 @@ int main()
     out = fopen("received-secret.txt", "w");
 
     int j, k;
-    int max_count, max_set;
+    int max_count=0, max_set=0;
 
     // TODO: CONFIGURE THIS -- currently, 32*assoc to force eviction out of L2
     setup(trojan_array, ASSOCIATIVITY*L2_TO_L1_SIZE);
