@@ -128,7 +128,7 @@ void setup(uint64_t *base, int assoc)
  * Note that you may need to serialize execution wherever
  * appropriate.
  */
-void trojan(char byte)
+void trojan(char byte, int k)
 {
     int set, j;
     uint64_t *eviction_set_addr;
@@ -145,6 +145,8 @@ void trojan(char byte)
         printf("pp trojan: unrecognized character %c\n", byte);
         exit(1);
     }
+    if (k == 0)
+        fprintf(stderr, "%c %d", byte, set);
     
     /* TODO:
      * Your attack code goes in here.
@@ -254,7 +256,7 @@ int main()
             break;
         }
         for (k = 0; k < SAMPLES; k++) {
-          trojan(msg);
+          trojan(msg, k);
           spy();
         }
         for (j = 0; j < L1_NUM_SETS; j++) {
