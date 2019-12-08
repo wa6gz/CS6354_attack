@@ -160,6 +160,7 @@ void trojan(char byte)
 
 
     // get base address
+    CPUID();
     eviction_set_addr = get_eviction_set_address(trojan_array, set, 0);
     //start reading at base address of set
     for (j = 1; j < L2_TO_L1_SIZE * ASSOCIATIVITY; j++) {
