@@ -145,8 +145,8 @@ void trojan(char byte, int k)
         printf("pp trojan: unrecognized character %c\n", byte);
         exit(1);
     }
-    if (k == 0)
-        fprintf(stderr, "%c %d\n", byte, set);
+    // if (k == 0)
+    //     fprintf(stderr, "%c %d\n", byte, set);
     
     /* TODO:
      * Your attack code goes in here.
@@ -277,7 +277,7 @@ int main()
           trojan(msg, k);
           spy();
         }
-        printEvicCounts(eviction_counts);
+        // printEvicCounts(eviction_counts);
         for (j = 0; j < L1_NUM_SETS; j++) {
             if (eviction_counts[j] > max_count) {
                 max_count = eviction_counts[j];
@@ -291,7 +291,7 @@ int main()
             max_set = -22;
         }
         fprintf(out, "%c", 32 + max_set);
-        fprintf(stderr, "*%c*\n", 32 + max_set);
+        // fprintf(stderr, "*%c*\n", 32 + max_set);
         max_count = max_set = 0;
     }
     fclose(in);
