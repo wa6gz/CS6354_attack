@@ -269,11 +269,10 @@ int main()
     
     for (;;) {
         char msg = fgetc(in);
-        print()
         if (msg == EOF) {
             break;
         }
-        CPUID();
+        //CPUID();
         for (k = 0; k < SAMPLES; k++) {
           trojan(msg, k);
           spy();
