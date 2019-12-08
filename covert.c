@@ -29,10 +29,10 @@
 #define NUM_OFFSET_BITS 6
 #define NUM_INDEX_BITS 6
 #define NUM_OFF_IND_BITS (NUM_OFFSET_BITS + NUM_INDEX_BITS)
-#define L2_TO_L1_SIZE 
+#define L2_TO_L1_SIZE 256
 
 uint64_t eviction_counts[L1_NUM_SETS] = {0};
-__attribute__ ((aligned (64))) uint64_t trojan_array[32*4096];
+__attribute__ ((aligned (64))) uint64_t trojan_array[L2_TO_L1_SIZE*4096];
 __attribute__ ((aligned (64))) uint64_t spy_array[4096];
 
 uint64_t read_overhead;
@@ -162,7 +162,7 @@ void trojan(char byte)
     // get base address
     eviction_set_addr = get_eviction_set_address(trojan_array, set, 0);
     //start reading at base address of set
-    for (j = 1; j < 32 * ASSOCIATIVITY; j++) {
+    for (j = 1; j < L2_TO_L1_SIZE * ASSOCIATIVITY; j++) {
         //*eviction_set_addr = (uint64_t)get_eviction_set_address(trojan_array, byte, j);
         eviction_set_addr = (uint64_t *)*eviction_set_addr;
     }
@@ -237,7 +237,7 @@ int main()
     int max_count, max_set;
 
     // TODO: CONFIGURE THIS -- currently, 32*assoc to force eviction out of L2
-    setup(trojan_array, ASSOCIATIVITY*32);
+    setup(trojan_array, ASSOCIATIVITY*L2_TO_L1_SIZE);
 
     setup(spy_array, ASSOCIATIVITY);
 
