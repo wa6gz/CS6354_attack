@@ -266,9 +266,13 @@ int main()
 
     read_overhead = compute_read_overhead();
     loop_overhead = compute_loop_overhead();
+
+    int charNum = 0;
     
     for (;;) {
         char msg = fgetc(in);
+        if(charNum % 100 == 0)
+            printf("%d\n",charNum);
         if (msg == EOF) {
             break;
         }
@@ -293,6 +297,7 @@ int main()
         fprintf(out, "%c", 32 + max_set);
         // fprintf(stderr, "*%c*\n", 32 + max_set);
         max_count = max_set = 0;
+        charNum++;
     }
     fclose(in);
     fclose(out);
