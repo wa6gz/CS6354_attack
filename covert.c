@@ -29,11 +29,32 @@
 #define NUM_OFFSET_BITS 6
 #define NUM_INDEX_BITS 6
 #define NUM_OFF_IND_BITS (NUM_OFFSET_BITS + NUM_INDEX_BITS)
+#define L2_TO_L1_SIZE 
 
 uint64_t eviction_counts[L1_NUM_SETS] = {0};
 __attribute__ ((aligned (64))) uint64_t trojan_array[32*4096];
 __attribute__ ((aligned (64))) uint64_t spy_array[4096];
 
+uint64_t read_overhead;
+uint64_t loop_overhead;
+
+uint64_t compute_read_overhead()
+{
+    uint64_t start = 0, end = 0;
+    RDTSC(start);
+    RDTSC(end);
+    return (end - start);
+}
+
+uint64_t compute_loop_overhead()
+{
+    uint64_t start = 0, end = 0, i;
+    RDTSC(start);
+    for (i = 0; i < SAMPLES; i++) {
+    }
+    RDTSC(end);
+    return (end - start - read_overhead) / SAMPLES;
+}
 
 /* TODO:
  * This function provides an eviction set address, given the
@@ -49,7 +70,10 @@ __attribute__ ((aligned (64))) uint64_t spy_array[4096];
  *
  *
  *
- *
+ * For way 0, given a base address in a large block of memory, compute 
+    the next valid memory location that falls in a given set.
+    For way n (for 1-7), the function adds n to the tag bit to force
+    the address to be the nth array location that maps to the given set. 
  */
 uint64_t* get_eviction_set_address(uint64_t *base, int set, int way)
 {
@@ -106,8 +130,9 @@ void setup(uint64_t *base, int assoc)
  */
 void trojan(char byte)
 {
-    int set;
+    int set, j;
     uint64_t *eviction_set_addr;
+    printf("%s\n", "in trojan with byte");
 
     if (byte >= 'a' && byte <= 'z') {
         byte -= 32;
@@ -123,9 +148,25 @@ void trojan(char byte)
     
     /* TODO:
      * Your attack code goes in here.
-     *
+     * INSERT code from slides from evict and time
      */  
 
+    //goal: communicate 6 bits
+    //use 6 index bits as side channel
+    //for char of value c, get base addr for set c
+    //follow linked list to make access to set c
+    //   and clear 
+    //return
+
+
+    // get base address
+    eviction_set_addr = get_eviction_set_address(trojan_array, set, 0);
+    //start reading at base address of set
+    for (j = 1; j < 32 * ASSOCIATIVITY; j++) {
+        //*eviction_set_addr = (uint64_t)get_eviction_set_address(trojan_array, byte, j);
+        eviction_set_addr = (uint64_t *)*eviction_set_addr;
+    }
+    //read entire linked list
 }
 
 /* TODO:
@@ -147,8 +188,10 @@ void trojan(char byte)
  */
 char spy()
 {
-    int i, max_set;
+    int i, max_set, j;
     uint64_t *eviction_set_addr;
+    uint64_t start, end, time, max_time = 0;
+    printf("%s\n", "in spy");
 
     // Probe the cache line by line and take measurements
     for (i = 0; i < L1_NUM_SETS; i++) {
@@ -156,6 +199,30 @@ char spy()
          * Your attack code goes in here.
          *
          */  
+        start = 0; end = 0; 
+        //Start timer
+        //RDTSC(start);
+        // get base address
+        eviction_set_addr = get_eviction_set_address(spy_array, i, 0);
+        RDTSC(start);
+        //start reading at base address of set
+        for (j = 1; j < ASSOCIATIVITY; j++) {
+            //*eviction_set_addr = (uint64_t)get_eviction_set_address(spy_array, i, j);
+            eviction_set_addr = (uint64_t *)*eviction_set_addr;
+        }
+        //read entire linked list
+        //end timer
+        RDTSC(end);
+        //if linked list took too long too access
+        // set was accessed 
+        time = end - start - read_overhead - (ASSOCIATIVITY-1) * loop_overhead;
+
+        if(time > max_time){
+            max_time = time;
+            max_set = i;
+        }
+
+
     }
     eviction_counts[max_set]++;
 }
@@ -173,6 +240,9 @@ int main()
     setup(trojan_array, ASSOCIATIVITY*32);
 
     setup(spy_array, ASSOCIATIVITY);
+
+    read_overhead = compute_read_overhead();
+    loop_overhead = compute_loop_overhead();
     
     for (;;) {
         char msg = fgetc(in);
