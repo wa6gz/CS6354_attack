@@ -234,7 +234,7 @@ char spy()
 }
 
 int printEvicCounts(int* evicCounts){
-    printf("\t")
+    printf("\t");
     int i, j;
     for(j = 0; j < 16; j++)
             printf("%d\t",j);
@@ -273,7 +273,7 @@ int main()
           trojan(msg, k);
           spy();
         }
-        printEvicCounts();
+        printEvicCounts(eviction_counts);
         for (j = 0; j < L1_NUM_SETS; j++) {
             if (eviction_counts[j] > max_count) {
                 max_count = eviction_counts[j];
