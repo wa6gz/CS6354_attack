@@ -205,6 +205,7 @@ char spy()
         //RDTSC(start);
         // get base address
         eviction_set_addr = get_eviction_set_address(spy_array, i, 0);
+        CPUID();
         RDTSC(start);
         //start reading at base address of set
         for (j = 1; j < ASSOCIATIVITY; j++) {
@@ -268,7 +269,7 @@ int main()
             max_set = -22;
         }
         fprintf(out, "%c", 32 + max_set);
-        fprintf(stderr, "%c", 32 + max_set);
+        fprintf(STDERR, "%c", 32 + max_set);
         max_count = max_set = 0;
     }
     fclose(in);
