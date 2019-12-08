@@ -166,6 +166,7 @@ void trojan(char byte)
         //*eviction_set_addr = (uint64_t)get_eviction_set_address(trojan_array, byte, j);
         eviction_set_addr = (uint64_t *)*eviction_set_addr;
     }
+    CPUID();
     //read entire linked list
 }
 
@@ -213,6 +214,7 @@ char spy()
         //read entire linked list
         //end timer
         RDTSC(end);
+        CPUID();
         //if linked list took too long too access
         // set was accessed 
         time = end - start - read_overhead - (ASSOCIATIVITY-1) * loop_overhead;
