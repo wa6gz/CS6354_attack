@@ -168,6 +168,7 @@ void trojan(char byte, int k)
     for (j = 1; j < L2_TO_L1_SIZE * ASSOCIATIVITY; j++) {
         //*eviction_set_addr = (uint64_t)get_eviction_set_address(trojan_array, byte, j);
         eviction_set_addr = (uint64_t *)*eviction_set_addr;
+        CPUID();
     }
     CPUID();
     //read entire linked list
@@ -214,6 +215,7 @@ char spy()
         for (j = 1; j < ASSOCIATIVITY; j++) {
             //*eviction_set_addr = (uint64_t)get_eviction_set_address(spy_array, i, j);
             eviction_set_addr = (uint64_t *)*eviction_set_addr;
+            CPUID();
         }
         //read entire linked list
         //end timer
