@@ -268,6 +268,7 @@ int main()
             max_set = -22;
         }
         fprintf(out, "%c", 32 + max_set);
+        printf("%c", 32 + max_set);
         max_count = max_set = 0;
     }
     fclose(in);
